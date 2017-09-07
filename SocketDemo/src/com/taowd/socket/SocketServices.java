@@ -26,6 +26,7 @@ public class SocketServices {
 			Socket socket = serviceSocket.accept();// 开启监听
 
 			// 获取一个输入流，接收客户端发送的数据
+			System.out.println("开始接受客户端数据----");
 			InputStream is = socket.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
@@ -34,14 +35,16 @@ public class SocketServices {
 				System.out.println("我是服务端，客户端说：" + temp);
 
 			}
+			System.out.println("客户端数据接收完毕--");
 			socket.shutdownInput();
 
+			System.out.println("开始服务端向客户端发送数据--");
 			OutputStream os = socket.getOutputStream();
 			PrintWriter pw = new PrintWriter(os);
-			pw.write("这里是服务端发送的信息，我很好！");
+			pw.write("这里是服务端发送的信息，我很好！\n");
 			pw.flush();
 			socket.shutdownOutput();
-
+			System.out.println("结束服务端向客户端发送数据--");
 			os.close();
 			pw.close();
 			br.close();
@@ -51,6 +54,7 @@ public class SocketServices {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} finally {
 
