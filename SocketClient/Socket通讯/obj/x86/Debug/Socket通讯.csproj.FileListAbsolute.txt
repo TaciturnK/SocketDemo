@@ -1,0 +1,11 @@
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\MainWindow.baml
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\MainWindow.g.cs
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\App.g.cs
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯_MarkupCompile.cache
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.g.resources
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.Properties.Resources.resources
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.csproj.GenerateResource.Cache
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\bin\Debug\Socket通讯.exe
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\bin\Debug\Socket通讯.pdb
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.exe
+D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.pdb
