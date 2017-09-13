@@ -35,6 +35,7 @@ namespace Socket通讯
                 return -1;
             }
             NetworkStream stream = null;
+            
             BinaryWriter sw = null;
             FileStream fsMyfile = null;
             BinaryReader brMyfile = null;
@@ -43,15 +44,27 @@ namespace Socket通讯
                 TcpClient client = new TcpClient(Ip, Port);
                 stream = client.GetStream();
                 sw = new BinaryWriter(stream);
-                ///取得文件名字节数组
+
+              
+
+                //第一步：写入通讯标志(用来区分是下载还是上传文件)  1-代表上传   2-代表下载
+                byte[] flagBytes = Encoding.Default.GetBytes("1");
+                byte[] flagBytesArray = new byte[10];
+                Array.Copy(flagBytes, flagBytesArray, flagBytes.Length);
+                sw.Write(flagBytesArray, 0, flagBytesArray.Length);
+                sw.Flush();//发送标志
+
+
+                //第二步：写入文件的名称(用来服务端下载或者上传文件)
+                //取得文件名字节数组
                 byte[] fileNameBytes = Encoding.Default.GetBytes(fileName);
-                byte[] fileNameBytesArray = new byte[1024];
-                Array.Copy(fileNameBytes, fileNameBytesArray, fileNameBytes.Length);
-                ///写入流
-                sw.Write(fileNameBytesArray, 0, fileNameBytesArray.Length);
-                sw.Flush();
-                ///获取文件内容字节数组
-                ///byte[] fileBytes = returnbyte(filePath);
+                byte[] fileBytesArray = new byte[1024];
+                Array.Copy(fileNameBytes, fileBytesArray, fileNameBytes.Length);
+                sw.Write(fileBytesArray, 0, fileBytesArray.Length);
+                sw.Flush();//发送文件名称
+
+
+                //第三步：读取文件流数据
                 fsMyfile = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 brMyfile = new BinaryReader(fsMyfile);
                 ///写入流
@@ -63,6 +76,8 @@ namespace Socket通讯
                     sw.Flush();
                     buffer = new byte[1024];
                 }
+
+
             }
             catch (SocketException se)
             {
@@ -115,8 +130,20 @@ namespace Socket通讯
                 TcpClient client = new TcpClient(Ip, Port);
                 stream = client.GetStream();
                 sw = new BinaryWriter(stream);
+
+                //第一步：写入通讯标志(用来区分是下载还是上传文件)  1-代表上传   2-代表下载  0-代表测试
+                byte[] flagBytes = Encoding.Default.GetBytes("0");
+                byte[] flagBytesArray = new byte[10];
+                Array.Copy(flagBytes, flagBytesArray, flagBytes.Length);
+                sw.Write(flagBytesArray, 0, flagBytesArray.Length);
+                sw.Flush();//发送标志
+
                 byte[] fileNameBytes = Encoding.Default.GetBytes(name);
                 sw.Write(fileNameBytes, 0, fileNameBytes.Length);
+                sw.Flush();
+
+
+
                 return true;
             }
             catch (Exception ex)

@@ -68,8 +68,8 @@ namespace Socket通讯
 
 
             //注意此处的测试内容需和服务端保持一致  否则无法判断是否成功
-            if (FileUtils.TestConnection("test message"))
-            {
+            //if (FileUtils.TestConnection("test message"))
+            //{
                 int result = FileUtils.StartSend(txt_sendInfo.Text, "Socket" + txt_sendInfo.Text.Substring(txt_sendInfo.Text.LastIndexOf('\\') + 1));
                 if (result == 0)
                 {
@@ -95,11 +95,11 @@ namespace Socket通讯
                     MessageBox.Show("未知异常！");
 
                 }
-            }
-            else
-            {
-                MessageBox.Show("无法连接服务器！");
-            }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("无法连接服务器！");
+            //}
 
 
         }
@@ -145,5 +145,14 @@ namespace Socket通讯
             txt_sendInfo.Text = path;
         }
 
+        /// <summary>
+        /// 下载逻辑
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

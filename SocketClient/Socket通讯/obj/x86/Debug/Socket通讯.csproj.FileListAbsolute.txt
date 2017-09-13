@@ -9,3 +9,15 @@ D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\bin\Debug\Socket通讯.
 D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\bin\Debug\Socket通讯.pdb
 D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.exe
 D:\Visual Studio 2010\Projects\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.pdb
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.exe
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.pdb
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\bin\Debug\Socket通讯.exe
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\bin\Debug\Socket通讯.pdb
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.csprojResolveAssemblyReference.cache
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\MainWindow.baml
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\MainWindow.g.cs
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\App.g.cs
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯_MarkupCompile.cache
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.g.resources
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.Properties.Resources.resources
+E:\GitHub\SocketDemo\SocketClient\Socket通讯\obj\x86\Debug\Socket通讯.csproj.GenerateResource.Cache

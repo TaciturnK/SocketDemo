@@ -3,6 +3,9 @@ package com.taowd.socketserver;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -84,30 +87,79 @@ public class SocketServer {
 			// 注意：此处需要和客户端保持一致
 			byte[] buffer = new byte[1024];
 			String fileName = null;
+
+			// 获取通讯标志
+			byte[] flagByte = new byte[10];
+			String Flag = "";
+
 			try {
 				s = ss.accept();
 				in = new BufferedInputStream(s.getInputStream());
-				// 取得文件名
-				in.read(buffer, 0, buffer.length);
-				fileName = new String(buffer).trim();
-				// 若为测试信息
-				if (fileName.equals("test message")) {
-					System.out.println("接收到测试消息!");
-					continue;
+				// 先取通讯标志
+				in.read(flagByte, 0, flagByte.length);
+				Flag = new String(flagByte).trim();
+
+				System.out.println("获取到通讯标志：" + Flag);
+
+				// 1-代表上传 2-代表下载 0-代表测试
+				switch (Flag) {
+				case "0": {
+					System.out.println("进入服务端测试逻辑********");
+
+					in.read(buffer, 0, buffer.length);
+					fileName = new String(buffer).trim();
+					System.out.println("接收到测试信息：" + fileName);
+
+					// 检查是否为测试数据：
+					if (fileName.equals("test message")) {
+						System.out.println("接受到客户端发送的消息，通讯成功!");
+
+						// 获得输出流
+						OutputStream os = s.getOutputStream();
+						PrintWriter pw = new PrintWriter(os);
+
+						pw.write("server Test");
+						pw.flush();
+
+						os.close();
+						pw.close();
+
+					}
+
 				}
-				// 定义文件流
-				out = new FileOutputStream(
-						new File(path + new SimpleDateFormat("yyyymmddhhmmss").format(new Date()) + fileName));
-				out.flush();
-				buffer = new byte[1024];
-				// 写文件内容
-				int count = 0;
-				while ((count = in.read(buffer, 0, buffer.length)) > 0) {
-					out.write(buffer, 0, count);
+					break;
+				case "1": {
+					System.out.println("上传逻辑**********");
+					// 取得文件名
+					in.read(buffer, 0, buffer.length);
+					fileName = new String(buffer).trim();
+					System.out.println("接收到文件名称：" + fileName);
+
+					// 定义文件流
+					out = new FileOutputStream(
+							new File(path + new SimpleDateFormat("yyyymmddhhmmss").format(new Date()) + fileName));
 					out.flush();
 					buffer = new byte[1024];
+					// 写文件内容
+					int count = 0;
+					while ((count = in.read(buffer, 0, buffer.length)) > 0) {
+						out.write(buffer, 0, count);
+						out.flush();
+						buffer = new byte[1024];
+					}
+
 				}
-				System.out.println("接收到文件" + fileName);
+					break;
+				case "2": {
+					System.out.println("下载逻辑");
+
+				}
+					break;
+
+				default:
+					break;
+				}
+
 			} catch (Exception ex) {
 				System.out.println("传输异常");
 
