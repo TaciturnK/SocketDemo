@@ -16,6 +16,7 @@ using System.Threading;
 using System.Net;
 using Microsoft.Win32;
 using System.IO;
+using System.Collections;
 
 namespace Socket通讯
 {
@@ -29,7 +30,14 @@ namespace Socket通讯
             InitializeComponent();
             txt_ip.Text = "127.0.0.1";
             txt_port.Text = "60000";
+
+            cbo_Download.ItemsSource = new Dictionary<string, string> { { "pom.xml", "Pom" }, { "Hello.txt", "hello" } };
+            cbo_Download.SelectedValuePath = "Key";
+            cbo_Download.DisplayMemberPath = "Value";
+            cbo_Download.SelectedIndex = 0;
+
         }
+
 
         /// <summary>
         /// 单纯测试字符串传输
@@ -70,36 +78,39 @@ namespace Socket通讯
             //注意此处的测试内容需和服务端保持一致  否则无法判断是否成功
             //if (FileUtils.TestConnection("test message"))
             //{
-                int result = FileUtils.StartSend(txt_sendInfo.Text, "Socket" + txt_sendInfo.Text.Substring(txt_sendInfo.Text.LastIndexOf('\\') + 1));
-                if (result == 0)
-                {
-                    MessageBox.Show("文件发送成功！");
-                }
-                else if (result == -1)
-                {
-                    MessageBox.Show("文件不存在！");
+            string receiveInfo = string.Empty;
+            int result = FileUtils.StartUpload("1", txt_sendInfo.Text, "Socket" + txt_sendInfo.Text.Substring(txt_sendInfo.Text.LastIndexOf('\\') + 1), out receiveInfo);
+            if (result == 0)
+            {
+                MessageBox.Show("文件发送成功！");
+            }
+            else if (result == -1)
+            {
+                MessageBox.Show("文件不存在！");
 
-                }
-                else if (result == -2)
-                {
-                    MessageBox.Show("连接失败！");
+            }
+            else if (result == -2)
+            {
+                MessageBox.Show("连接失败！");
 
-                }
-                else if (result == -3)
-                {
-                    MessageBox.Show("IO异常！");
+            }
+            else if (result == -3)
+            {
+                MessageBox.Show("IO异常！");
 
-                }
-                else if (result == -4)
-                {
-                    MessageBox.Show("未知异常！");
+            }
+            else if (result == -4)
+            {
+                MessageBox.Show("未知异常！");
 
-                }
+            }
             //}
             //else
             //{
             //    MessageBox.Show("无法连接服务器！");
             //}
+
+            tb_result.AppendText(receiveInfo.Trim() + "\n");
 
 
         }
@@ -120,7 +131,8 @@ namespace Socket通讯
                 return;
             }
 
-            if (FileUtils.TestConnection("test message"))
+            string receive = string.Empty;
+            if (FileUtils.TestConnection("test message", out receive))
             {
                 MessageBox.Show("通讯测试成功 ");
             }
@@ -128,6 +140,8 @@ namespace Socket通讯
             {
                 MessageBox.Show("通讯测试失败");
             }
+
+            tb_result.AppendText(receive.Trim() + "\n");
         }
 
         private void 选择文件_Click(object sender, RoutedEventArgs e)
@@ -152,7 +166,62 @@ namespace Socket通讯
         /// <param name="e"></param>
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            if (cbo_Download.Items.Count <= 0)
+            {
+                MessageBox.Show("未设置下载文件");
+                return;
+            }
 
+
+
+            //设置IP和端口号
+            FileUtils.Ip = txt_ip.Text.Trim();
+
+            int port = 60000;
+            if (Int32.TryParse(txt_port.Text.Trim(), out port))
+            {
+                FileUtils.Port = port;
+            }
+            else
+            {
+                MessageBox.Show("端口号格式不正确，请检查！");
+                return;
+            }
+
+            string receiveInfo = string.Empty;
+            int result = FileUtils.DownLoad("2", cbo_Download.SelectedValue.ToString(), out receiveInfo);
+            if (result == 0)
+            {
+                MessageBox.Show("文件发送成功！");
+            }
+            else if (result == 8)
+            {
+                MessageBox.Show("文件下载成功！");
+
+            }
+            else if (result == -1)
+            {
+                MessageBox.Show("文件不存在！");
+
+            }
+            else if (result == -2)
+            {
+                MessageBox.Show("连接失败！");
+
+            }
+            else if (result == -3)
+            {
+                MessageBox.Show("IO异常！");
+
+            }
+            else if (result == -4)
+            {
+                MessageBox.Show("未知异常！");
+
+            }
+
+
+            tb_result.AppendText(receiveInfo.Trim() + "\n");
         }
     }
 }

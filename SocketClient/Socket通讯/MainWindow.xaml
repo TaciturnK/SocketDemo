@@ -45,7 +45,6 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Background="Beige"
-            IsEnabled="False"
             Text=""
             TextWrapping="Wrap" />
         <TextBox
@@ -82,29 +81,27 @@
             VerticalAlignment="Top"
             Click="选择文件_Click"
             Content="选择文件" />
-        <TextBox
-            x:Name="textBox"
-            Width="256"
-            Height="23"
-            Margin="122,245,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Text=""
-            TextWrapping="Wrap" />
+
         <TextBlock
             x:Name="textBlock"
-            Margin="69,249,0,0"
+            Margin="51,250,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Text="下载路径"
+            Text="选择下载文件"
             TextWrapping="Wrap" />
         <Button
             x:Name="button"
             Width="75"
-            Margin="403,249,0,0"
+            Margin="403,250,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Click="button_Click"
             Content="下载" />
+        <ComboBox
+            x:Name="cbo_Download"
+            Width="157"
+            Margin="122,248,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" />
     </Grid>
 </Window>
