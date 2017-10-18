@@ -16,9 +16,7 @@ import java.util.ResourceBundle;
 
 /**
  * 
- * @author Taowd
- * TODO  Socket通讯服务端
- * 2017年9月2日 下午12:04:37
+ * @author Taowd TODO Socket通讯服务端 2017年9月2日 下午12:04:37
  */
 public class SocketServer {
 
@@ -41,7 +39,6 @@ public class SocketServer {
 		ResourceBundle rb = ResourceBundle.getBundle("config", Locale.getDefault());
 
 		path = rb.getString("path");
-		String portStr = rb.getString("port");
 		downLoad = rb.getString("dowmload").toString();
 
 		if (path == null || path.trim().equals("")) {
@@ -59,9 +56,9 @@ public class SocketServer {
 		File file = new File(downLoad);
 		SocketServer.judeDirExists(file);
 
-		if (portStr != null || !portStr.trim().equals("")) {
+		if (rb.getString("port") != null || !"".equals(rb.getString("port").trim())) {
 			try {
-				port = Integer.parseInt(portStr);
+				port = Integer.parseInt(rb.getString("port"));
 			} catch (Exception ex) {
 				System.out.println("端口获取失败，已变更为默认端口60000");
 				port = 60000;
@@ -78,7 +75,11 @@ public class SocketServer {
 		new SocketServer().receiveFile();
 	}
 
-	// 判断文件夹是否存在
+	/**
+	 * 判断文件夹是否存在
+	 * 
+	 * @param file
+	 */
 	public static void judeDirExists(File file) {
 
 		if (file.exists()) {
@@ -96,9 +97,7 @@ public class SocketServer {
 
 	/**
 	 * 
-	 * @author Taowd
-	 * TODO 接收文件操作
-	 * 2017年9月2日 下午12:04:57
+	 * @author Taowd TODO 接收文件操作 2017年9月2日 下午12:04:57
 	 */
 	@SuppressWarnings("resource")
 	public void receiveFile() {
@@ -124,19 +123,19 @@ public class SocketServer {
 
 			// 获取通讯标志
 			byte[] flagByte = new byte[10];
-			String Flag = "";
+			String flag = "";
 
 			try {
 				s = ss.accept();
 				in = new BufferedInputStream(s.getInputStream());
 				// 先取通讯标志
 				in.read(flagByte, 0, flagByte.length);
-				Flag = new String(flagByte).trim();
+				flag = new String(flagByte).trim();
 
-				System.out.println("获取到通讯标志：" + Flag);
+				System.out.println("获取到通讯标志：" + flag);
 
 				// 1-代表上传 2-代表下载 0-代表测试
-				switch (Flag) {
+				switch (flag) {
 				case "0": {
 					System.out.println("进入服务端测试逻辑********");
 
@@ -146,7 +145,7 @@ public class SocketServer {
 					System.out.println("接收到测试信息：" + fileName);
 
 					// 第二步： 检查是否为测试数据：
-					if (fileName.equals("test message")) {
+					if ("test message".equals(fileName)) {
 						System.out.println("接受到客户端发送的消息，通讯成功!");
 
 						// 第三步：向客户端发送服务端的测试数据
@@ -209,7 +208,8 @@ public class SocketServer {
 					dout = new DataOutputStream(s.getOutputStream());
 					System.out.println("开始发送文件----" + new Date().toString());
 					// 第二步： 根据下载路径读取文件流
-					if (new File(fileName).exists()) {// 检查文件是否存在
+					// 检查文件是否存在
+					if (new File(fileName).exists()) {
 						fins = new FileInputStream(new File(fileName));
 						int length = 0;
 						byte[] sendByte = new byte[1024];
