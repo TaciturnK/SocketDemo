@@ -47,6 +47,10 @@ public class SocketServer {
 			path = path + "/";
 		}
 
+		// 检查上传路径是否存在，如果不存在则进行创建
+		File file1 = new File(path);
+		SocketServer.judeDirExists(file1);
+
 		if (downLoad == null || downLoad.trim().equals("")) {
 			downLoad = "E:/";
 		} else if (!downLoad.endsWith("/")) {
@@ -70,13 +74,18 @@ public class SocketServer {
 		System.out.println("读取完成:" + "接收端口" + port + ",上传文件存储路径" + path + ",下载文件获取路径" + downLoad);
 	}
 
+	/**
+	 * 主方法
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		new SocketServer().receiveFile();
 	}
 
 	/**
-	 * 判断文件夹是否存在
+	 * 判断文件夹是否存在，如果不存在就创建一个文件夹
 	 * 
 	 * @param file
 	 */
@@ -86,10 +95,10 @@ public class SocketServer {
 			if (file.isDirectory()) {
 				// System.out.println("dir exists");
 			} else {
-				System.out.println("the same name file exists, can not create dir");
+				System.out.println("已经存在对应的文件夹，无需创建！");
 			}
 		} else {
-			System.out.println("下载路径不存在，正在创建...");
+			System.out.println("路径不存在，正在创建...");
 			file.mkdir();
 		}
 
@@ -185,11 +194,13 @@ public class SocketServer {
 
 					// 第四步：给客户端发送信息，保存成功
 					// 获得输出流
-					// System.out.println("完成数据接收，准备发送返回的数据信息");
-					// PrintWriter pw = new PrintWriter(s.getOutputStream());
-					// pw.println("SUCCESS");
-					// pw.flush();
-					// pw.close();
+					System.out.println("完成数据接收，准备发送返回的数据信息");
+					OutputStream os = s.getOutputStream();
+					PrintWriter pw = new PrintWriter(os);
+					pw.write("SUCCESS");
+					pw.flush();
+					os.close();
+					pw.close();
 
 				}
 					break;

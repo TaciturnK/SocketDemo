@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Windows;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace Socket通讯
 {
@@ -47,62 +48,108 @@ namespace Socket通讯
 
             try
             {
-                TcpClient client = new TcpClient(Ip, Port);
-                stream = client.GetStream();
-                sw = new BinaryWriter(stream);
-                br = new BinaryReader(stream);
+                // IP地址.
+                IPAddress localAddr = IPAddress.Parse(Ip);
+                // 接入点.
+                IPEndPoint ephost = new IPEndPoint(localAddr, Port);
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //尝试连接主机
+                socket.Connect(ephost);
 
                 //第一步：写入通讯标志(用来区分是下载还是上传文件)  1-代表上传   2-代表下载  0-代表测试
                 byte[] flagBytes = Encoding.Default.GetBytes(flag);
-                byte[] flagBytesArray = new byte[10];
+                byte[] flagBytesArray = new byte[flagBytes.Length];
                 Array.Copy(flagBytes, flagBytesArray, flagBytes.Length);
-                sw.Write(flagBytesArray, 0, flagBytesArray.Length);
-                sw.Flush();//发送标志
-
+                //socket.Send(flagBytesArray, 0, flagBytesArray.Length, SocketFlags.None);
 
                 //第二步：写入文件的名称(用来服务端下载或者上传文件)
                 //取得文件名字节数组
                 byte[] fileNameBytes = Encoding.Default.GetBytes(fileName);
-                byte[] fileBytesArray = new byte[1024];
-                Array.Copy(fileNameBytes, fileBytesArray, fileNameBytes.Length);
-                sw.Write(fileBytesArray, 0, fileBytesArray.Length);
-                sw.Flush();//发送文件名称
+                byte[] fileNameBytesArray = new byte[1024];
+                Array.Copy(fileNameBytes, fileNameBytesArray, fileNameBytes.Length);
+                //socket.Send(fileBytesArray, 0, fileBytesArray.Length, SocketFlags.None);
 
 
+                byte[] fileDataBytesArray;
                 //第三步：读取文件流数据
                 using (fsMyfile = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
-
+                    fileDataBytesArray = new byte[fsMyfile.Length];
                     brMyfile = new BinaryReader(fsMyfile);
                     ///写入流
                     byte[] buffer = new byte[1024];
                     int count = 0;
                     while ((count = brMyfile.Read(buffer, 0, 1024)) > 0)
                     {
-                        sw.Write(buffer, 0, count);
-                        sw.Flush();
+                        Array.Copy(buffer, fileDataBytesArray, fileDataBytesArray.Length);
                         buffer = new byte[1024];
                     }
-
-
                     //延时获取全部数据
                     Delay(1.0);
-
-
                     receiveInfo = DateTime.Now.ToString() + "文件上传成功";
-                    return 0;
 
                 }
 
-                //第二步：开始接受服务端返回的数据
-                //byte[] bytes = new byte[1024];
-                ////开始接受服务端的返回数据
-                //int bytesRead = br.Read(bytes, 0, bytes.Length);
-
-                //receiveInfo = Encoding.Default.GetString(bytes).TrimEnd('\0');//注意去掉接收的特殊结尾符
-                //MessageBox.Show("服务器返回信息：" + Encoding.Default.GetString(bytes));
+                byte[] sendData = new byte[flagBytesArray.Length + fileNameBytesArray.Length + fileDataBytesArray.Length];
 
 
+
+                //   TcpClient client = new TcpClient(Ip, Port);
+                //   stream = client.GetStream();
+                //   sw = new BinaryWriter(stream);
+                ////   br = new BinaryReader(stream);
+
+                //   //第一步：写入通讯标志(用来区分是下载还是上传文件)  1-代表上传   2-代表下载  0-代表测试
+                //   byte[] flagBytes = Encoding.Default.GetBytes(flag);
+                //   byte[] flagBytesArray = new byte[10];
+                //   Array.Copy(flagBytes, flagBytesArray, flagBytes.Length);
+                //   sw.Write(flagBytesArray, 0, flagBytesArray.Length);
+                //   sw.Flush();//发送标志
+
+
+                //   //第二步：写入文件的名称(用来服务端下载或者上传文件)
+                //   //取得文件名字节数组
+                //   byte[] fileNameBytes = Encoding.Default.GetBytes(fileName);
+                //   byte[] fileBytesArray = new byte[1024];
+                //   Array.Copy(fileNameBytes, fileBytesArray, fileNameBytes.Length);
+                //   sw.Write(fileBytesArray, 0, fileBytesArray.Length);
+                //   sw.Flush();//发送文件名称
+
+
+                //   //第三步：读取文件流数据
+                //   using (fsMyfile = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                //   {
+
+                //       brMyfile = new BinaryReader(fsMyfile);
+                //       ///写入流
+                //       byte[] buffer = new byte[1024];
+                //       int count = 0;
+                //       while ((count = brMyfile.Read(buffer, 0, 1024)) > 0)
+                //       {
+                //           sw.Write(buffer, 0, count);
+                //           sw.Flush();
+                //           buffer = new byte[1024];
+                //       }
+                //       //延时获取全部数据
+                //       Delay(1.0);
+                //       receiveInfo = DateTime.Now.ToString() + "文件上传成功";
+
+                //   }
+
+                //   //if (client.Connected)
+                //   //{
+                //   //    MessageBox.Show("连接着--");
+                //   //}
+
+                //   //第二步：开始接受服务端返回的数据
+                //   byte[] bytes = new byte[1024];
+                //   //开始接受服务端的返回数据
+                //   int bytesRead = stream.Read(bytes, 0, bytes.Length);
+
+                //   receiveInfo = Encoding.Default.GetString(bytes).TrimEnd('\0');//注意去掉接收的特殊结尾符
+                //   MessageBox.Show("服务器返回信息：" + Encoding.Default.GetString(bytes).TrimEnd('\0'));
+                receiveInfo = "ceshi";
+                return 0;
             }
             catch (SocketException se)
             {
@@ -324,7 +371,7 @@ namespace Socket通讯
                 int bytesRead = stream.Read(bytes, 0, bytes.Length);
 
                 receiveInfo = Encoding.Default.GetString(bytes).TrimEnd('\0');//注意去掉接收的特殊结尾符
-                //MessageBox.Show("服务器返回信息：" + Encoding.Default.GetString(bytes));
+                //这里可以获取到服务端返回的数据 MessageBox.Show("服务器返回信息：" + Encoding.Default.GetString(bytes));
 
 
 
@@ -339,13 +386,11 @@ namespace Socket通讯
             }
         }
         private static void Delay(double second)
-
         {
 
             DateTime now = DateTime.Now;
 
             while (now.AddSeconds(second) > DateTime.Now)
-
             {
 
             }
